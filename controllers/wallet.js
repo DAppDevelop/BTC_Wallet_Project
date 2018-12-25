@@ -3,10 +3,9 @@ let fs = require("fs")
 let client = require("../models/walletClient").getWalletClient()
 let config = require("../config/config")
 let {success, fail} = require("../utils/myUtils")
+let myUtils = require("../utils/myUtils")
 
 module.exports = {
-
-
     walletCreate: (req, res) => {
         let { walletname, password } = req.body
 
@@ -43,5 +42,24 @@ module.exports = {
             })
 
         })
+    },
+
+    walletList: (req, res) => {
+        console.log("walletList")
+        let wallets = []
+        var files = fs.readdirSync(config.walletFilePath)
+        files.forEach(element => {
+            if(myUtils.stringWithSubstrEnd(element, ".dat")) {
+                wallets.push(element.slice(0,-4))
+            }
+        })
+        res.send(success(wallets))
+    },
+
+    walletExportMnemonic: (req, res) => {
+        let {walletname, password} = req.body
+        let filePath = path.join(config.walletFilePath, walletname+".dat")
+        client.import(fs.readFileSync(filePath))
+        res.send(success(client.credentials.mnemonic))
     }
 }
