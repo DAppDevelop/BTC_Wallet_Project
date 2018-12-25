@@ -18,6 +18,10 @@ router.post("/wallet/create", walletController.walletCreate)
 router.get("/wallet/list", walletController.walletList)
 //导出助记词
 router.post("/export/mnemonic", walletController.walletExportMnemonic)
+//通过助记词导入钱包
+router.post("/import/mnemonic", walletController.walletImportWithMnemonic)
+
+
 
 module.exports = router
 

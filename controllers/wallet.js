@@ -61,5 +61,56 @@ module.exports = {
         let filePath = path.join(config.walletFilePath, walletname+".dat")
         client.import(fs.readFileSync(filePath))
         res.send(success(client.credentials.mnemonic))
+    },
+
+    walletImportWithMnemonic: (req, res) => {
+        let {walletname, password, mnemonic} = req.body
+
+        client.importFromMnemonic(mnemonic, {
+            network: config.networkType,
+            passphrase: password,
+        }, function(err, ret){
+            if (err) {
+                res.send(fail(err.message))
+                return
+            }
+            console.log(client)
+            let filePath = path.join(config.walletFilePath, walletname+".dat")
+            fs.writeFileSync(filePath, client.export())
+            res.send(success("导入成功"))
+        })
+
+        
+
+        // console.log(walletname, password, mnemonic)
+        // client.seedFromMnemonic(mnemonic, {
+        //     network: config.networkType,
+        //     passphrase: password,
+        //     coin: config.coinType,
+        // })
+
+        // client.createWallet(walletname, config.copayerName, 1, 1, {
+        //     network: config.networkType,
+        //     withMnemonics: mnemonic,
+        //     coin: config.coinType,
+        // }, function(err, ret){
+        //     // console.log(err, ret)
+        //     if (err) {
+        //         res.send(fail(err.message))
+        //         return
+        //     }
+
+        //     let filePath = path.join(config.walletFilePath, walletname+".dat")
+        //     fs.writeFileSync(filePath, client.export())
+
+        //     client.createAddress({}, function(err, addr){
+        //         if (err) {
+        //             res.send(fail(err.message))
+        //             return
+        //         }
+
+        //         res.send(success("导入成功"))
+        //     })
+        // })
     }
 }

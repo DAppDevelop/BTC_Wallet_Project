@@ -37,6 +37,51 @@ $(document).ready(function () {
         }
     })
 
+    //助记词导入钱包
+    $("#wallet-mnemonic-import-form").validate({
+        rules: {
+            walletname: {
+                required: true,
+            },
+            password: {
+                required: true,
+            },
+            mnemonic: {
+                required: true,
+            }
+        },
+        messages: {
+            walletname: {
+                required: "请输入新建的钱包名称",
+            },
+            password: {
+                required: "请输入新建的钱包密码",
+            },
+            mnemonic: {
+                required: "请输入要导入的助记词",
+            },
+        },
+        submitHandler: function (form) {
+            $(form).ajaxSubmit({
+                url: "/import/mnemonic",
+                type: "post",
+                dataType: "json",
+                success: function (res, status) {
+                    // console.log(status + JSON.stringify(res))
+                    alert(JSON.stringify(res.data))
+                    if (res.code == 0) {
+                        window.location.reload()
+                    }
+                },
+                error: function (res, status) {
+                    console.log(status + JSON.stringify(res))
+                }
+            });
+        }
+    })
+
+
+
     $.get("/wallet/list", function(res, status){
         if  (res.code == 0) {
             let walletTable = $("#wallet-list-table")
