@@ -20,7 +20,14 @@ router.get("/wallet/list", walletController.walletList)
 router.post("/export/mnemonic", walletController.walletExportMnemonic)
 //通过助记词导入钱包
 router.post("/import/mnemonic", walletController.walletImportWithMnemonic)
-
+//导出私钥
+router.post("/export/privatekey", walletController.walletExportPrivateKey)
+//查询余额
+router.post("/wallet/balance", walletController.walletBalance)
+//获取地址
+router.post("/wallet/address", walletController.walletAddress)
+//获取子账号地址
+router.post("/wallet/newsubaddress", walletController.walletNewSubAddress)
 
 
 module.exports = router

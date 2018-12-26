@@ -37,7 +37,6 @@ module.exports = {
                     res.send(fail("createAddress失败"))
                     return
                 }
-
                 res.send(success("创建成功"))
             })
 
@@ -79,38 +78,68 @@ module.exports = {
             fs.writeFileSync(filePath, client.export())
             res.send(success("导入成功"))
         })
+    },
 
-        
+    walletBalance: (req, res)=>{
+        let {walletname} = req.body
+        // console.log(walletname)
+        let filePath = path.join(config.walletFilePath, walletname+".dat")
+        console.log(filePath)
+        client.import(fs.readFileSync(filePath))
+        console.log(client)
+        client.getBalance({}, (err, balanceData)=>{
+            console.log(err, balanceData)
+            if (err) {
+                res.send(fail(err.message))
+                return
+            }
+            
+            res.send(success(balanceData))
 
-        // console.log(walletname, password, mnemonic)
-        // client.seedFromMnemonic(mnemonic, {
-        //     network: config.networkType,
-        //     passphrase: password,
-        //     coin: config.coinType,
-        // })
+        })
+    },
 
-        // client.createWallet(walletname, config.copayerName, 1, 1, {
-        //     network: config.networkType,
-        //     withMnemonics: mnemonic,
-        //     coin: config.coinType,
-        // }, function(err, ret){
-        //     // console.log(err, ret)
-        //     if (err) {
-        //         res.send(fail(err.message))
-        //         return
-        //     }
+    walletAddress: (req, res)=>{
+        let {walletname} = req.body
+        let filePath = path.join(config.walletFilePath, walletname+".dat")
+        client.import(fs.readFileSync(filePath))
 
-        //     let filePath = path.join(config.walletFilePath, walletname+".dat")
-        //     fs.writeFileSync(filePath, client.export())
+        client.getMainAddresses({}, (err, addressData)=>{
+            console.log(err, addressData)
+            if (err) {
+                res.send(fail(err.message))
+                return
+            }
+            
+            res.send(success(addressData))
+        })
+    },
 
-        //     client.createAddress({}, function(err, addr){
-        //         if (err) {
-        //             res.send(fail(err.message))
-        //             return
-        //         }
+    walletNewSubAddress: (req, res)=>{
+        let {walletname} = req.body
+        let filePath = path.join(config.walletFilePath, walletname+".dat")
+        client.import(fs.readFileSync(filePath))
+        client.createAddress({}, function (err, addr) {
+            console.log(err, addr)
+            if (err) {
+                res.send(fail(err.message))
+                return
+            }
+            res.send(success(addr))
+        });
 
-        //         res.send(success("导入成功"))
-        //     })
-        // })
-    }
+    },
+
+    walletExportPrivateKey: (req, res)=>{
+        let {walletname, password, childpath} = req.body
+        let filePath = path.join(config.walletFilePath, walletname+".dat")
+        client.import(fs.readFileSync(filePath))
+
+        let derivedXPrivKey = client.credentials.getDerivedXPrivKey(null);
+        let privateKey = derivedXPrivKey.deriveChild(childpath).privateKey
+        res.send(success(privateKey.toWIF()))
+
+    },
+
+
 }

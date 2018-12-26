@@ -82,21 +82,21 @@ $(document).ready(function () {
 
 
 
-    $.get("/wallet/list", function(res, status){
-        if  (res.code == 0) {
+    $.get("/wallet/list", function (res, status) {
+        if (res.code == 0) {
             let walletTable = $("#wallet-list-table")
             localStorage.setItem("walletlist", JSON.stringify(res.data))
             res.data.forEach(wallet => {
                 let walletTr = `<tr>
                 <td class="wallet-ele" id="${wallet}">${wallet}</td>
                 <td><button onclick="exportMnemonic('${wallet}')">导出助记词</button></td>
-            </tr>`
-            walletTable.append(walletTr)
+                </tr>`
+                walletTable.append(walletTr)
 
-            $(".wallet-ele").click(function(){
-                localStorage.setItem("currentwallet", $(this).attr("id"))
-                window.location.href = "walletinfo.html"
-            })
+                $(".wallet-ele").click(function () {
+                    localStorage.setItem("currentwallet", $(this).attr("id"))
+                    window.location.href = "walletinfo.html"
+                })
 
 
             })
