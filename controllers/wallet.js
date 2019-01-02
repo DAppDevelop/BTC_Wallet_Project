@@ -4,6 +4,7 @@ let client = require("../models/walletClient").getWalletClient()
 let config = require("../config/config")
 let {success, fail} = require("../utils/myUtils")
 let myUtils = require("../utils/myUtils")
+let btcUtils = require("bitcore-lib").Unit
 
 module.exports = {
     walletCreate: (req, res) => {
@@ -94,7 +95,10 @@ module.exports = {
                 return
             }
             
-            res.send(success(balanceData))
+            let totalAmount = btcUtils.fromSatoshis(balanceData.totalAmount).toBTC()
+            let lockedAmount = btcUtils.fromSatoshis(balanceData.lockedAmount).toBTC()
+            let balanceDataDic = {"totalAmount":totalAmount, "lockedAmount":lockedAmount}
+            res.send(success(balanceDataDic))
 
         })
     },

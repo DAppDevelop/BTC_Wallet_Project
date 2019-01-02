@@ -11,8 +11,8 @@ $(document).ready(function(){
     let params = {"walletname":currentwallet}
     $.post("/wallet/balance", params, function(res, state){
         console.log(res, state);
-        $("#balance").text(res.data.totalAmount/100000000)
-        $("#unc_balance").text(res.data.lockedAmount/100000000)
+        $("#balance").text(res.data.totalAmount)
+        $("#unc_balance").text(res.data.lockedAmount)
     })
 
     updateWalletAddressList()
