@@ -1,6 +1,7 @@
 let router = require("express").Router()
 let walletController = require("../controllers/wallet")
 let webController = require("../controllers/web")
+let transactionController = require("../controllers/transaction")
 
 router.get("/", (req,res)=>{
     res.send("hello!")
@@ -28,7 +29,8 @@ router.post("/wallet/balance", walletController.walletBalance)
 router.post("/wallet/address", walletController.walletAddress)
 //获取子账号地址
 router.post("/wallet/newsubaddress", walletController.walletNewSubAddress)
-
+//发送交易
+router.post("/transaction/send", transactionController.transactionSend)
 
 module.exports = router
 

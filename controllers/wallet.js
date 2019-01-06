@@ -33,7 +33,8 @@ module.exports = {
 
             //创建账号
             client.createAddress({}, function (err, address) {
-                console.log("address: ", address)
+                console.log("\n创建账号");
+                console.log("\naddress: ", address)
                 if (err) {
                     res.send(fail("createAddress失败"))
                     return
@@ -45,7 +46,7 @@ module.exports = {
     },
 
     walletList: (req, res) => {
-        console.log("walletList")
+        // console.log("walletList")
         let wallets = []
         var files = fs.readdirSync(config.walletFilePath)
         files.forEach(element => {
@@ -74,7 +75,7 @@ module.exports = {
                 res.send(fail(err.message))
                 return
             }
-            console.log(client)
+            // console.log(client)
             let filePath = path.join(config.walletFilePath, walletname+".dat")
             fs.writeFileSync(filePath, client.export())
             res.send(success("导入成功"))
@@ -87,8 +88,9 @@ module.exports = {
         let filePath = path.join(config.walletFilePath, walletname+".dat")
         console.log(filePath)
         client.import(fs.readFileSync(filePath))
-        console.log(client)
+        // console.log(client)
         client.getBalance({}, (err, balanceData)=>{
+            console.log("\nwalletBalance");
             console.log(err, balanceData)
             if (err) {
                 res.send(fail(err.message))
@@ -97,7 +99,8 @@ module.exports = {
             
             let totalAmount = btcUtils.fromSatoshis(balanceData.totalAmount).toBTC()
             let lockedAmount = btcUtils.fromSatoshis(balanceData.lockedAmount).toBTC()
-            let balanceDataDic = {"totalAmount":totalAmount, "lockedAmount":lockedAmount}
+            let availableAmount = btcUtils.fromSatoshis(balanceData.availableAmount).toBTC()
+            let balanceDataDic = {"totalAmount":totalAmount, "lockedAmount":lockedAmount, "availableAmount":availableAmount}
             res.send(success(balanceDataDic))
 
         })
@@ -109,6 +112,7 @@ module.exports = {
         client.import(fs.readFileSync(filePath))
 
         client.getMainAddresses({}, (err, addressData)=>{
+            console.log("\nwalletAddress");
             console.log(err, addressData)
             if (err) {
                 res.send(fail(err.message))
@@ -124,6 +128,7 @@ module.exports = {
         let filePath = path.join(config.walletFilePath, walletname+".dat")
         client.import(fs.readFileSync(filePath))
         client.createAddress({}, function (err, addr) {
+            console.log("\nwalletNewSubAddress");
             console.log(err, addr)
             if (err) {
                 res.send(fail(err.message))
