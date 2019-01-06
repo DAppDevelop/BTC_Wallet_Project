@@ -65,5 +65,22 @@ module.exports = {
                 })
             })
         })
-    }
+    },
+
+    transactionRecord: (req, res) => {
+        let {walletname} = req.body
+        console.log(walletname);
+
+        let filePath = path.join(config.walletFilePath, walletname + ".dat")
+        client.import(fs.readFileSync(filePath));
+
+        client.getTxHistory({includeExtendedInfo:true}, (err, data) => {
+            console.log(err, data);
+            if (err) {
+                res.send(fail(err.message))
+                return
+            }
+            res.send(success(data))
+        });
+    },
 }

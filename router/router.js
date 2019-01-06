@@ -31,6 +31,8 @@ router.post("/wallet/address", walletController.walletAddress)
 router.post("/wallet/newsubaddress", walletController.walletNewSubAddress)
 //发送交易
 router.post("/transaction/send", transactionController.transactionSend)
+//交易记录
+router.post("/transaction/record", transactionController.transactionRecord)
 
 module.exports = router
 
